@@ -4,13 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel='shortcut icon' type='image/x-icon' href='images/fav.ico' />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <title>Document</title>
 </head>
 <body>
-    <canvas id="myCanvasOne" width="150" height="320" style="border: 1px solid blue"></canvas>
-    <canvas id="myCanvasTwo" width="150" height="320" style="border: 1px solid red"></canvas>
-    <canvas id="myCanvasThree" width="150" height="320" style="border: 1px solid green"></canvas>
-    <button id='start'>start</button>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2">
+                credits
+            </div>
+            <div class="col-sm-8" style="border: 1px solid green; text-align: center">
+                <div id="results" style="width: 100%" class="blink">
+                    results:
+                </div>
+                <canvas id="myCanvasOne" width="150" height="300" style="border: 1px solid blue"></canvas>
+                <canvas id="myCanvasTwo" width="150" height="300" style="border: 1px solid red"></canvas>
+                <canvas id="myCanvasThree" width="150" height="300" style="border: 1px solid green"></canvas>
+            </div>
+            <div class="col-sm-2">
+                <img src="images/button.png" alt="button" id="start" height="200px" width="200px">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+                <div style="text-align:right; width: 100%;">
+                    <button class="btn btn-info" id="showDebug">debug mode</button>
+                </div>
+                    <div id="debug_area" style="display: none; text-align: center; width: 100%;">
+                        <table class="table" style="width:67%">
+                            <tr>
+                                <td>top</td>
+                                <td><select name="" id="reel1_top"></select></td>
+                                <td><select name="" id="reel2_top"></select></td>
+                                <td><select name="" id="reel3_top"></select></td>
+                            </tr>
+                            <tr>
+                                <td>middle</td>
+                                <td><select name="" id="reel1_mid"></select></td>
+                                <td><select name="" id="reel2_mid"></select></td>
+                                <td><select name="" id="reel3_mid"></select></td>
+                            </tr>
+                            <tr>
+                                <td>bottom</td>
+                                <td><select name="" id="reel1_bottom"></select></td>
+                                <td><select name="" id="reel2_bottom"></select></td>
+                                <td><select name="" id="reel3_bottom"></select></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+
+    
+    
+    
 </body>
 <script src="index.js"></script>
+<script src="service.js"></script>
 </html>
