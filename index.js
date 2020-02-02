@@ -59,7 +59,7 @@ class Slot {
                startY = 0;
                this.moveImage(imageName, -200);
            }
-        }, 10);
+        }, 5);
     }
 
     loop() {
@@ -144,13 +144,16 @@ const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
 
     const resEl = document.getElementById('results');
 
+    let clicked = false;
+
     document.getElementById('start').addEventListener('click', async() => {
+        if (clicked) return;
+        clicked = true;
         resEl.innerHTML='';
         let deltas = [Math.random(0, 1.5), Math.random(0, 1.5)+0.5, Math.random(0, 1.5)+1].sort();
         slot_1.setDelta(deltas[0]);
         slot_2.setDelta(deltas[1]);
         slot_3.setDelta(deltas[2]);
-
 
         const isDebug = document.getElementById('debug_area').style.display === 'block';
 
@@ -174,6 +177,7 @@ const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
 
 
         setTimeout(() => {
+
             const res1 = slot_1.getResults();
             const res2 = slot_2.getResults();
             const res3 = slot_3.getResults();
@@ -184,6 +188,7 @@ const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
             slot_2.setDebugMode(false);
             slot_3.setDebugMode(false);
 
+            clicked = false;
 
         }, 4000)
 
