@@ -11,7 +11,6 @@ class Slot {
         this.intervals = [];
         this.results = [];
         this.debug = false;
-
     }
 
     init() {
@@ -39,7 +38,7 @@ class Slot {
     }
 
     moveImage(imageName, startY=0) {
-        if ( (Date.now() - this.start)/1000 > 2 + this.delta +0.1) {
+        if ( (Date.now() - this.start)/1000 > 1 + this.delta +0.1) {
             this.intervals.forEach( int => {
                 clearInterval(int);
             });
@@ -48,7 +47,7 @@ class Slot {
             return;
         }
     
-        const interval = setInterval(()=>{
+        const interval = setInterval(() => {
            startY += this.step;
            this.ctx.clearRect(0, startY-this.step, 120, startY+100+this.step);
            this.ctx.drawImage(this.loadedImages[imageName]['name'], 20,startY, 100, 100);
@@ -59,7 +58,7 @@ class Slot {
                startY = 0;
                this.moveImage(imageName, -200);
            }
-        }, 5);
+        }, 10);
     }
 
     loop() {
@@ -79,7 +78,6 @@ class Slot {
     }
 
     drawResults() {
-        console.log('res', this.results)
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         if (this.results.length) {
             this.ctx.drawImage(this.loadedImages[this.results[0]]['name'], 20,0, 100, 100);
@@ -87,36 +85,65 @@ class Slot {
             this.ctx.drawImage(this.loadedImages[this.results[2]]['name'], 20,200, 100, 100);
             return;
         }
-        for(let prop in this.loadedImages) {
-            if (this.loadedImages.hasOwnProperty(prop)) {
-                if (this.loadedImages[prop]['pos'] >= 0 && this.loadedImages[prop]['pos'] < 149) {
-                    this.ctx.drawImage(this.loadedImages[prop]['name'], 20,0, 100, 100);
-                    this.results[0] = prop;
-                }
-                if (this.loadedImages[prop]['pos'] >= 150 && this.loadedImages[prop]['pos'] < 250) {
-                    this.ctx.drawImage(this.loadedImages[prop]['name'], 20,100, 100, 100);
-                    this.results[1] = prop;
-                }
-                if (this.loadedImages[prop]['pos'] >= 251 && this.loadedImages[prop]['pos'] < 350) {
-                    this.ctx.drawImage(this.loadedImages[prop]['name'], 20,200, 100, 100);
-                    this.results[2] = prop;
-                }
+
+        const setWin = {};
+        for (let prop in this.loadedImages) {
+            if (this.loadedImages[prop]['pos'] >= -50 && this.loadedImages[prop]['pos'] < 149) {
+                setWin['top'] = this.loadedImages[prop]['name'];
+                this.results[0] = prop;
+            }
+            if (this.loadedImages[prop]['pos'] >= 150 && this.loadedImages[prop]['pos'] < 250) {
+                setWin['mid'] = this.loadedImages[prop]['name'];
+                this.results[1] = prop;
+            }
+            if (this.loadedImages[prop]['pos'] >= 251 && this.loadedImages[prop]['pos'] < 400) {
+                setWin['bottom'] = this.loadedImages[prop]['name'];
+                this.results[2] = prop;
             }
         }
+
+        console.log('=>', setWin, this.loadedImages);
+        this.ctx.drawImage(setWin['top'], 20, 0, 100, 100);
+        this.ctx.drawImage(setWin['mid'], 20, 100, 100, 100);
+        this.ctx.drawImage(setWin['bottom'], 20, 200, 100, 100);
         
     }
 
     fillBorders(pos) {
         this.ctx.fillStyle = "#FF0000";
         switch(pos) {
-            case 'top':
-                this.ctx.fillRect(0,0, 150, 5);
-                this.ctx.fillRect(0,100, 150, 5);
-                break;  
+            case 1:
+                this.ctx.fillRect(0,0, 150, 1);
+                this.ctx.fillRect(0,100, 150, 1);
+                setTimeout(() => {
+                    this.ctx.fillStyle = "white";
+                    this.ctx.fillRect(0,0, 150, 1);
+                    this.ctx.fillRect(0,100, 150, 1);
+                }, 2000);
+                break;
+            case 2:
+                this.ctx.fillRect(0,102, 150, 1);
+                this.ctx.fillRect(0,205, 150, 1);
+                setTimeout(() => {
+                    this.ctx.fillStyle = "white";
+                    this.ctx.fillRect(0,102, 150, 1);
+                    this.ctx.fillRect(0,205, 150, 1);
+                }, 2000);
+                break;
+            case 3:
+                this.ctx.fillRect(0,200, 150, 1);
+                this.ctx.fillRect(0,295, 150, 1);
+                setTimeout(() => {
+                    this.ctx.fillStyle = "white";
+                    this.ctx.fillRect(0,200, 150, 1);
+                    this.ctx.fillRect(0,295, 150, 1);
+                }, 2000);
+                break;
         }
     }
 
 }
+
 const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
 
 (async function(){
@@ -130,7 +157,7 @@ const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
                 loadedImages[imgName]['pos'] = 0;
                 resolve();
             };
-            img.src = 'images/'+imgName+'.png';
+            img.src = 'images/' + imgName + '.png';
         });
     });
     await Promise.all(promiseArray).then(console.log('ok'));
@@ -141,23 +168,28 @@ const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
     slot_2.init();
     slot_3.init();
     
-
     const resEl = document.getElementById('results');
 
     let clicked = false;
 
     document.getElementById('start').addEventListener('click', async() => {
         if (clicked) return;
+        let credits = localStorage.getItem('credits');
+        if (credits < 1) return;
+        credits -= 1;
+
         clicked = true;
-        resEl.innerHTML='';
-        let deltas = [Math.random(0, 1.5), Math.random(0, 1.5)+0.5, Math.random(0, 1.5)+1].sort();
+        
+        document.getElementById('credits').innerText = credits;
+        localStorage.setItem('credits', credits);
+
+        resEl.innerHTML = '';
+        let deltas = [Math.random(0, 1), Math.random(0, 1)+0.5, Math.random(0, 1)+1].sort();
         slot_1.setDelta(deltas[0]);
         slot_2.setDelta(deltas[1]);
         slot_3.setDelta(deltas[2]);
 
         const isDebug = document.getElementById('debug_area').style.display === 'block';
-
-        console.log('is: ', isDebug);
 
         if (isDebug) {
             slot_1.setDebugMode(true);
@@ -181,8 +213,18 @@ const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
             const res1 = slot_1.getResults();
             const res2 = slot_2.getResults();
             const res3 = slot_3.getResults();
-            const res = checkCases(res1, res2, res3);
+            const { res, line } = checkCases(res1, res2, res3);
+            
+            slot_1.fillBorders(line);
+            slot_2.fillBorders(line);
+            slot_3.fillBorders(line);
+
             resEl.innerHTML= '<span>' + res + '</span>';
+
+            let scores = parseInt(localStorage.getItem('scores'));
+            scores = isNaN(scores) ? res : scores + res; 
+            localStorage.setItem('scores', scores);
+            document.getElementById('scores').innerText = scores;
             
             slot_1.setDebugMode(false);
             slot_2.setDebugMode(false);
@@ -190,9 +232,7 @@ const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
 
             clicked = false;
 
-        }, 4000)
-
-
+        }, 3000)
 
         function checkCases(res1, res2, res3) {
             let resultScore = 0;
@@ -205,59 +245,56 @@ const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
                 [res1[2], res2[2], res3[2]],
             ];
 
-            for(let i=0; i<lines.length; i++) {
-        
+            for (let i=0; i<lines.length; i++) {
                 if (lines[i].every(el => el === 'Cherry')) {
-                    if (i===0) return 2000;
-                    if (i===1) return 1000;
-                    if (i===2) return 4000;
+                    if (i === 0) return {res: 2000, line: 1};
+                    if (i === 1) return {res: 1000, line: 2};
+                    if (i === 2) return {res: 4000, line: 3};
                 }
-                
             }
              
-            for(let i=0; i<lines.length; i++) {
+            for (let i=0; i<lines.length; i++) {
                 if (lines[i].every(el => el === '7')) {
-                    return 150;
+                    return {res: 150, line: i+1};
                 }
             }    
         
-            for(let i=0; i<lines.length; i++) {
+            for (let i=0; i<lines.length; i++) {
                 if (lines[i].indexOf('7') != -1 && lines[i].indexOf('Cherry') != -1) {
-                    console.log(lines[i]);
-                    return 75;
+                    return {res: 75, line: i+1};
                 }
             }
         
-            for(let i=0; i<lines.length; i++) {
+            for (let i=0; i<lines.length; i++) {
                 if (lines[i].every(el => el === '3xBAR')) {
-                    return 50;
+                    return {res: 50, line: i+1};
                 }
             }
                 
-            for(let i=0; i<lines.length; i++) {
+            for (let i=0; i<lines.length; i++) {
                 if (lines[i].every(el => el === '2xBAR')) {
-                    return 20;
+                    return {res: 20, line: i+1};
                 }
             }    
         
-            for(let i=0; i<lines.length; i++) {
+            for (let i=0; i<lines.length; i++) {
                 if (lines[i].every(el => el === 'BAR')) {
-                    return 10;
+                    return {res: 10, line: i+1};
                 }
             }   
         
-            for(let i=0; i<lines.length; i++) {
-                let barSet = new Set();
-               lines[i].forEach( el => {
+            for (let i=0; i<lines.length; i++) {
+                const barSet = [];
+                lines[i].forEach( el => {
                     if (bars.indexOf(el) != -1) {
-                        barSet.add(el);
+                        barSet.push(el);
                     }
                 });
         
-                if (barSet.size > 1) return 5;
+                if (barSet.length > 1) return {res: 5, line: i+1};;
             }
             
-            return 0
+            return {res: 0, line: 0};
 
         }
 

@@ -1,0 +1,52 @@
+.canvases {
+    text-align: center;
+}
+
+div#debug_area{
+    display: none; 
+    text-align: center; 
+    width: 100%;
+}
+
+i#credits, i#scores{
+    font-size: 16px;
+    color: brown;
+}
+
+div.btn_area{
+    text-align:right;
+    width: 100%;
+}
+
+table.debug_opt{
+    width:67%;
+}
+
+a#start {
+    display: inline-block;
+    margin-top: 45%
+}
+
+a#start:hover{
+    cursor: pointer;
+}
+
+.blink{
+    width:100%;
+    min-height: 100px;
+    padding: 15px;	
+    text-align: center;
+}
+
+span{
+    font-size: 42px;
+    font-family: cursive;
+    color: green;
+    animation: blink 1s linear infinite;
+}
+
+@keyframes blink{
+    0%{opacity: 0;}
+    50%{opacity: .5;}
+    100%{opacity: 1;}
+}
