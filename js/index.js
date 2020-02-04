@@ -109,35 +109,28 @@ class Slot {
         
     }
 
-    fillBorders(pos) {
-        this.ctx.fillStyle = "#FF0000";
+    fillBorders(pos, clean = false) {
+        this.ctx.fillStyle = !clean ? "#FF0000" : "white";
         switch(pos) {
+            case 0:
+                this.ctx.fillRect(0,0, 150, 1);
+                this.ctx.fillRect(0,100, 150, 1);
+                this.ctx.fillRect(0,100, 150, 1);
+                this.ctx.fillRect(0,202, 150, 1);
+                this.ctx.fillRect(0,200, 150, 1);
+                this.ctx.fillRect(0,295, 150, 1);
+                break;
             case 1:
                 this.ctx.fillRect(0,0, 150, 1);
                 this.ctx.fillRect(0,100, 150, 1);
-                setTimeout(() => {
-                    this.ctx.fillStyle = "white";
-                    this.ctx.fillRect(0,0, 150, 1);
-                    this.ctx.fillRect(0,100, 150, 1);
-                }, 2000);
                 break;
             case 2:
-                this.ctx.fillRect(0,102, 150, 1);
-                this.ctx.fillRect(0,205, 150, 1);
-                setTimeout(() => {
-                    this.ctx.fillStyle = "white";
-                    this.ctx.fillRect(0,102, 150, 1);
-                    this.ctx.fillRect(0,205, 150, 1);
-                }, 2000);
+                this.ctx.fillRect(0,100, 150, 1);
+                this.ctx.fillRect(0,202, 150, 1);
                 break;
             case 3:
                 this.ctx.fillRect(0,200, 150, 1);
                 this.ctx.fillRect(0,295, 150, 1);
-                setTimeout(() => {
-                    this.ctx.fillStyle = "white";
-                    this.ctx.fillRect(0,200, 150, 1);
-                    this.ctx.fillRect(0,295, 150, 1);
-                }, 2000);
                 break;
         }
     }
@@ -177,6 +170,10 @@ const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
         let credits = localStorage.getItem('credits');
         if (credits < 1) return;
         credits -= 1;
+
+        slot_1.fillBorders(0, true);
+        slot_2.fillBorders(0, true);
+        slot_3.fillBorders(0, true);
 
         clicked = true;
         
