@@ -92,7 +92,7 @@ class Slot {
                 setWin['top'] = this.loadedImages[prop]['name'];
                 this.results[0] = prop;
             }
-            if (this.loadedImages[prop]['pos'] >= 150 && this.loadedImages[prop]['pos'] < 250) {
+            if (this.loadedImages[prop]['pos'] >= 150 && this.loadedImages[prop]['pos'] < 270) {
                 setWin['mid'] = this.loadedImages[prop]['name'];
                 this.results[1] = prop;
             }
@@ -212,9 +212,12 @@ const images = ['2xBAR','3xBAR','BAR', '7', 'Cherry'];
             const res3 = slot_3.getResults();
             const { res, line } = checkCases(res1, res2, res3);
             
-            slot_1.fillBorders(line);
-            slot_2.fillBorders(line);
-            slot_3.fillBorders(line);
+            setTimeout(()=>{
+                slot_1.fillBorders(line);
+                slot_2.fillBorders(line);
+                slot_3.fillBorders(line);
+            }, 300)
+            
 
             resEl.innerHTML= '<span>' + res + '</span>';
 
